@@ -124,10 +124,22 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 		if( c != null){
 			c.moveToFirst();
 		}
-		c.close();
-		db.close();
 		
 		return c;
+	}
+	
+	public Cursor getSelectedAccountInfo(long rowId){
+		String query = "SELECT * FROM " + TABLE_ACCOUNT + " WHERE " 
+				+ KEY_ID + " = " + rowId;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		
+		if(c != null){
+			c.moveToFirst();
+		}
+		
+		return c;
+		
 	}
 	
 	public void updateAccount(String uid, double longitude, double latitude){

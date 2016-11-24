@@ -99,6 +99,7 @@ public class MainActivity extends Activity {
 		
 		if(accountType.equals("ADMIN")){
 			btnViewAll.setVisibility(View.VISIBLE);
+			// will enter all accounts
 			new InsertAccountTask(this).execute();
 			
 		}else{
@@ -137,6 +138,8 @@ public class MainActivity extends Activity {
 			if(accountType.equals("ADMIN")){
 				db.deleteAccounts();
 			}
+			new UpdateLocationTask(this,uid,0.0,0.0).execute();
+			
 	        // Launching the login activity
 	        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 	        startActivity(intent);

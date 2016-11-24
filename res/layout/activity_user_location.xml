@@ -62,9 +62,9 @@
         <ImageView android:layout_width="20dp"
             android:layout_height="20dp"
             android:background = "@drawable/ic_menu_refresh"
-            android:layout_toRightOf="@+id/location"
-            android:layout_alignBottom="@+id/location"
-            android:onClick="ocRefresh"
+            android:layout_toRightOf="@+id/tvlocation"
+            android:layout_alignBottom="@+id/tvlocation"
+            android:onClick="ocRefreshLocate"
             />
         
       </RelativeLayout>

@@ -49,6 +49,7 @@ public class InsertAccountTask extends AsyncTask<String, String, String>{
 			super.onPreExecute();
 			if (!pDialog.isShowing())
 				pDialog.show();
+				db.deleteAccounts();
 		}
 		@Override
 		protected String doInBackground(String... params) {

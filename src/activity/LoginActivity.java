@@ -83,6 +83,7 @@ public class LoginActivity extends Activity {
 			if (!email.isEmpty() && !password.isEmpty()) {
 				// checkLogin(email,password);
 //				if(CheckConnection.isOnline(LoginActivity.this)){
+					
 					new LoginTask(LoginActivity.this,email, password).execute();	
 //				}else{
 //					Toast.makeText(this, "Connect to the Internet", Toast.LENGTH_SHORT).show();
@@ -162,6 +163,7 @@ public class LoginActivity extends Activity {
 					String created_at = user.getString("created_at");
 					String phone = user.getString("phone");
 					String type = user.getString("type");
+					
 					
 					db.addUser(name, email, uid, created_at,phone,type);
 					
