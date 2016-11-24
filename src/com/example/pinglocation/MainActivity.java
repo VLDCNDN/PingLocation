@@ -1,24 +1,36 @@
 package com.example.pinglocation;
 
 import helper.GPSTrack;
+import helper.JSONParser;
 import helper.SQLiteHandler;
 import helper.SessionManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import utils.InsertAccountTask;
 
 
 import activity.LoginActivity;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import app.AppConfig;
 
 public class MainActivity extends Activity {
 
@@ -37,6 +49,10 @@ public class MainActivity extends Activity {
 	private SessionManager session;
 	
 	GPSTrack gps;
+	
+	JSONParser jsonParser = new JSONParser();
+	
+	String uid;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +85,7 @@ public class MainActivity extends Activity {
 			
 			
 		}else{
-			Toast.makeText(this, "Enable your network", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Enable your GPS", Toast.LENGTH_SHORT).show();
 		}
 		
 		HashMap<String, String> hash = db.getUserDetails();
@@ -78,6 +94,8 @@ public class MainActivity extends Activity {
 		textName.setText(textName.getText().toString() +" "+hash.get("name")+"!");
 		txtEmail.setText(txtEmail.getText().toString() + " " +hash.get("email"));
 		txtPhone.setText(txtPhone.getText().toString() + " " +hash.get("phone"));
+		
+		uid = hash.get("uid");
 		
 		if(accountType.equals("ADMIN")){
 			btnViewAll.setVisibility(View.VISIBLE);
@@ -133,12 +151,71 @@ public class MainActivity extends Activity {
 				
 				txtLat.setText(""+latitude);
 				txtLong.setText(""+longitude);
+				new UpdateLocationTask(this,uid,latitude,longitude).execute();
 				
 				Toast.makeText(this, "Location set", Toast.LENGTH_SHORT).show();
 			}else{
 				gps.showAlert();
 			}
 		 
+		 
+	 }
+	 
+	 class UpdateLocationTask extends AsyncTask<String, String, String>{
+		 
+		 String uid;
+		 double latitude;
+		 double longitude;
+		 Context context;
+		 
+		 UpdateLocationTask(Context context, String uid, double latitude, double longitude){
+			 this.context = context;
+			 this.latitude = latitude;
+			 this.longitude = longitude;
+			 this.uid = uid;
+		 }
+		 
+		 @Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+			//	showDialog();
+			}
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			
+			List<NameValuePair> params2 = new ArrayList<NameValuePair>();
+			params2.add(new BasicNameValuePair("uid",uid));
+			params2.add(new BasicNameValuePair("longitude",Double.toString(longitude)));
+			params2.add(new BasicNameValuePair("latitude", Double.toString(latitude)));
+			
+			JSONObject json = jsonParser.makeHttpRequest(AppConfig.URL_UPDATE_LOCATION, "POST", params2);
+			
+			try{
+				boolean error = json.getBoolean("error");
+				
+				if(!error){
+					Log.e("TESTING","location updated");
+					return "success";
+				}else{
+					return "error";
+				}
+			}catch(JSONException e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		/*
+		 * After completing background task Dismiss the progress dialog *
+		 */
+		protected void onPostExecute(String result) {
+			// dismiss the dialog once done
+			if(result.equals("success")){
+				//hideDialog();	
+			}
+			
+		}
 		 
 	 }
 	 

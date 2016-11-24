@@ -59,6 +59,7 @@ public class LoginActivity extends Activity {
 		inputPassword = (EditText) findViewById(R.id.password);
 
 		pDialog = new ProgressDialog(this);
+		pDialog.setMessage("Sign in...");
 		pDialog.setCancelable(false);
 		// SQLite
 		db = new SQLiteHandler(getApplicationContext());

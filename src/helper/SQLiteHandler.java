@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 	
 	private static String TAG = SQLiteHandler.class.getSimpleName();
 	
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 5;
 	
 	private static final String DATABASE_NAME = "ping_schemas";
 	
@@ -21,13 +21,15 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 	private static final String TABLE_ACCOUNT = "account";
 	
 	// Login Columns
-	private static final String KEY_ID = "id";
-	private static final String KEY_NAME = "name";
-	private static final String KEY_EMAIL = "email";
-	private static final String KEY_UID = "uid";
-	private static final String KEY_CREATED_AT = "created_at";
-	private static final String KEY_PHONE = "phone";
-	private static final String KEY_TYPE = "type";
+	public static final String KEY_ID = "_id";
+	public static final String KEY_NAME = "name";
+	public static final String KEY_EMAIL = "email";
+	public static final String KEY_UID = "uid";
+	public static final String KEY_CREATED_AT = "created_at";
+	public static final String KEY_PHONE = "phone";
+	public static final String KEY_TYPE = "type";
+	public static final String KEY_LONGITUDE = "longitude";
+	public static final String KEY_LATITUDE = "latitude";
 	
 	
 	public SQLiteHandler(Context context){
@@ -44,7 +46,8 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 		String CREATE_ACCOUNT_TABLE = "CREATE TABLE " + TABLE_ACCOUNT + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
 				+ KEY_EMAIL + " TEXT, " + KEY_UID + " TEXT, " 
-				+ KEY_CREATED_AT + " TEXT," + KEY_PHONE + " TEXT" + ")";
+				+ KEY_CREATED_AT + " TEXT," + KEY_PHONE + " TEXT," 
+				+ KEY_LONGITUDE + " TEXT, " + KEY_LATITUDE + " TEXT" + ")";
 		
 		db.execSQL(CREATE_LOGIN_TABLE);
 		db.execSQL(CREATE_ACCOUNT_TABLE);
@@ -110,6 +113,36 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 		return user;
 		
 	}
+	
+	public Cursor getAllUser(){
+		String where = null;
+		SQLiteDatabase db = this.getReadableDatabase();
+		
+		String query = "SELECT * FROM " + TABLE_ACCOUNT;
+		Cursor c = db.rawQuery(query,null);
+		
+		if( c != null){
+			c.moveToFirst();
+		}
+		c.close();
+		db.close();
+		
+		return c;
+	}
+	
+	public void updateAccount(String uid, double longitude, double latitude){
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_LONGITUDE, longitude);
+		cv.put(KEY_LATITUDE, latitude);
+		
+		db.update(TABLE_ACCOUNT, cv, KEY_UID + " = " + uid, null);
+		
+		db.close();
+		
+	}
+	
+	
 	
 	public void deleteUsers(){
 		SQLiteDatabase db = this.getWritableDatabase();
