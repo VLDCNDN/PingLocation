@@ -42,6 +42,7 @@ public class InsertAccountTask extends AsyncTask<String, String, String>{
 			db = new SQLiteHandler(context);
 			
 			pDialog = new ProgressDialog(context);
+			pDialog.setMessage("Fetching users");
 			pDialog.setCancelable(false);
 			
 		}

@@ -15,12 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import utils.InsertAccountTask;
+import utils.MyPreference;
 
 
 import activity.LoginActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +49,8 @@ public class MainActivity extends Activity {
 	private Button btnViewAll;
 	
 	private SessionManager session;
+	
+	private boolean isFirstTime;
 	
 	GPSTrack gps;
 	
@@ -83,7 +87,7 @@ public class MainActivity extends Activity {
 			txtLat.setText(""+latitude);
 			txtLong.setText(""+longitude);
 			
-			
+			new UpdateLocationTask(this,uid,latitude,longitude).execute();
 		}else{
 			Toast.makeText(this, "Enable your GPS", Toast.LENGTH_SHORT).show();
 		}
@@ -100,7 +104,11 @@ public class MainActivity extends Activity {
 		if(accountType.equals("ADMIN")){
 			btnViewAll.setVisibility(View.VISIBLE);
 			// will enter all accounts
-			new InsertAccountTask(this).execute();
+			isFirstTime = MyPreference.isFirst(this);
+			if(isFirstTime){
+				new InsertAccountTask(this).execute();
+			}
+			
 			
 		}else{
 			btnViewAll.setVisibility(View.GONE);
@@ -137,6 +145,7 @@ public class MainActivity extends Activity {
 	        db.deleteUsers();
 			if(accountType.equals("ADMIN")){
 				db.deleteAccounts();
+				MyPreference.resetSharedPreff(this);
 			}
 			new UpdateLocationTask(this,uid,0.0,0.0).execute();
 			

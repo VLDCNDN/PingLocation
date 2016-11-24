@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import utils.CheckConnection;
+import utils.InsertAccountTask;
 
 import helper.JSONParser;
 import helper.SQLiteHandler;
@@ -186,10 +187,11 @@ public class LoginActivity extends Activity {
 		 */
 		protected void onPostExecute(String result) {
 			// dismiss the dialog once done
+			
 			if(result.equals("error")){
 				Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show();
 			}else{
-				
+
 				Intent intent = new Intent(context,
 						MainActivity.class);
 				

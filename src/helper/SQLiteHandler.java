@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 	
 	private static String TAG = SQLiteHandler.class.getSimpleName();
 	
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	
 	private static final String DATABASE_NAME = "ping_schemas";
 	
@@ -142,18 +142,36 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 		
 	}
 	
-	public void updateAccount(String uid, double longitude, double latitude){
+	public void updateAccount(String uid, String longitude, String latitude){
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		cv.put(KEY_LONGITUDE, longitude);
 		cv.put(KEY_LATITUDE, latitude);
 		
-		db.update(TABLE_ACCOUNT, cv, KEY_UID + " = " + uid, null);
-		
+		db.update(TABLE_ACCOUNT, cv, KEY_UID + " = \"" + uid + "\"", null);
 		db.close();
-		
 	}
 	
+	public double[] getUserLocation(String uid){
+		double[] location = {};
+		
+		SQLiteDatabase db= this.getWritableDatabase();
+		String query = "SELECT * FROM " + TABLE_ACCOUNT + " WHERE "
+				+ KEY_UID + " = \""+ uid+"\"";
+		
+		Cursor c= db.rawQuery(query, null);
+		if(c!=null){
+			c.moveToFirst();
+				location[0] = Double.parseDouble(c.getString(c.getColumnIndex(KEY_LONGITUDE)));
+				location[1] = Double.parseDouble(c.getString(c.getColumnIndex(KEY_LATITUDE)));
+			
+		}
+		
+		c.close();
+		db.close();
+		
+		return location;
+	}
 	
 	
 	public void deleteUsers(){

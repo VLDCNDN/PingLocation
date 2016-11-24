@@ -37,7 +37,7 @@ public class UserInfoActivity extends Activity{
 	private double longitude;
 	private double latitude;
 	
-	SQLiteHandler db;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +79,16 @@ public class UserInfoActivity extends Activity{
 		Context context;
 
 		JSONParser jsonParser = new JSONParser();
+		double[] location;
+		SQLiteHandler db;
 		
 		LoadUserLocation(Context context){
 			this.context = context;
 			pDialog = new ProgressDialog(context);
-			db = new SQLiteHandler(context);
 			pDialog.setMessage("Getting " + name + " Location");
+			
+			db = new SQLiteHandler(context);
+			
 			
 		}
 		
@@ -107,7 +111,9 @@ public class UserInfoActivity extends Activity{
 				if(!error){
 					longitude = json.getDouble("longitude");
 					latitude = json.getDouble("latitude");
-					Log.e("TESTING", ""+longitude+","+latitude);
+					
+					//location = db.getUserLocation(uid);
+					
 					
 					return "success";
 				}else{
@@ -125,11 +131,18 @@ public class UserInfoActivity extends Activity{
 		protected void onPostExecute(String result) {
 			// dismiss the dialog once done
 			if(result.equals("success")){
-
-				txtLongitude.setText(""+longitude);
-				txtLatitude.setText(""+latitude);
+				if(longitude <= 0 && latitude <= 0){
+					Toast.makeText(context, "can't locate " + name, Toast.LENGTH_SHORT).show();
+					
+				}else{
+					db.updateAccount(uid, String.valueOf(longitude), String.valueOf(latitude));
+					
+					txtLongitude.setText(""+longitude);
+					txtLatitude.setText(""+latitude);
+					Toast.makeText(context, name + " located!", Toast.LENGTH_SHORT).show();
+							
+				}
 				
-				Toast.makeText(context, name + " located!", Toast.LENGTH_SHORT).show();
 			}else{
 				Toast.makeText(context, "cant locate the user!", Toast.LENGTH_SHORT).show();
 				
