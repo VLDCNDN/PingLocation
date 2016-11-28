@@ -59,12 +59,13 @@
             android:textSize="16sp" 
             />
         
-        <ImageView android:layout_width="20dp"
+        <ImageView android:id="@+id/btnRefreshLocation"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:background = "@drawable/ic_menu_refresh"
             android:layout_toRightOf="@+id/tvlocation"
             android:layout_alignBottom="@+id/tvlocation"
-            android:onClick="ocRefreshLocate"
+            android:onClick="ocUserInfoClickListener"
             />
         
       </RelativeLayout>
@@ -120,7 +121,7 @@
                 android:textColor="@color/secondary_text" />
         </LinearLayout>
     </LinearLayout>
-	<!--  
+	
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,23 +132,22 @@
         android:paddingRight="@dimen/activity_vertical_margin" >
 
         <Button
-            android:id="@+id/btnViewAllUsers"
+            android:id="@+id/btnPing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@color/accent_color"
-            android:text="View all Users"
-            android:textColor="@color/text_color"
-            android:visibility="gone" />
+            android:text="Ping Location"
+            android:textColor="@color/text_color" />
 
-        <Button
+  <!-- <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/primary_color"
             android:text="LOGOUT"
-            android:textColor="@color/text_color" />
+            android:textColor="@color/text_color" />  -->      
     </LinearLayout>
--->
+
 </RelativeLayout>
