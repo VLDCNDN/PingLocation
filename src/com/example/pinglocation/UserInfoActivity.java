@@ -69,17 +69,8 @@ public class UserInfoActivity extends Activity{
 		
 	}
 	
-	public void ocUserInfoClickListener(View view){
-		switch(view.getId()){
-		case R.id.btnRefreshLocation:
-
-			new LoadUserLocation(this).execute();
-			break;
-		case R.id.btnPing:
-			
-			break;
-		}
-		
+	public void ocRefreshLocate(View view){
+		new LoadUserLocation(this).execute();
 	}
 	
 	class LoadUserLocation extends AsyncTask<String, String, String>{
